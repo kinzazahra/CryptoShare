@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoShare | Enterprise Secure Drop</title>
+    <style>
+        :root {
+            --primary: #4F46E5; /* Indigo */
+            --primary-hover: #4338CA;
+            --bg-color: #F3F4F6;
+            --text-main: #1F2937;
+            --text-muted: #6B7280;
+            --border: #E5E7EB;
+        }
+        
+        * { box-sizing: border-box; font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        
+        body { background-color: var(--bg-color); color: var(--text-main); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; }
+        
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { margin: 0; font-size: 28px; color: #111827; }
+        .header p { margin: 5px 0 0; color: var(--text-muted); font-size: 14px; }
+
+        .dashboard { display: flex; gap: 20px; max-width: 900px; width: 100%; flex-wrap: wrap; justify-content: center; }
+        
+        .card { background: white; border-radius: 12px; padding: 30px; width: 100%; max-width: 420px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); border: 1px solid var(--border); }
+        
+        .card h2 { margin-top: 0; font-size: 18px; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 20px; display: flex; align-items: center; gap: 8px;}
+        
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px; }
+        
+        input[type="file"], input[type="text"] { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; background-color: #F9FAFB; }
+        input[type="text"]:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+        
+        .btn { width: 100%; background-color: var(--primary); color: white; border: none; padding: 12px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background-color 0.2s; }
+        .btn:hover { background-color: var(--primary-hover); }
+        .btn:disabled { background-color: #9CA3AF; cursor: not-allowed; }
+
+        .result-box { margin-top: 20px; padding: 15px; background-color: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 6px; display: none; }
+        .result-box h3 { margin: 0 0 10px 0; font-size: 14px; color: #065F46; }
+        .key-display { background: #fff; padding: 10px; border: 1px dashed #34D399; border-radius: 4px; font-family: monospace; font-size: 12px; word-break: break-all; color: #111827; user-select: all;}
+        
+        .status-text { font-size: 13px; color: var(--text-muted); margin-top: 10px; text-align: center; display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>CryptoShare</h1>
+        <p>Enterprise-Grade Encrypted File Transfer</p>
+    </div>
+
+    <div class="dashboard">
+        <!-- ENCRYPT PANEL -->
+        <div class="card">
+            <h2>🔒 Encrypt & Upload</h2>
+            <div class="form-group">
+                <label for="fileInput">Select File to Secure</label>
+                <input type="file" id="fileInput">
+            </div>
+            <button class="btn" id="uploadBtn">Encrypt File</button>
+            <div class="status-text" id="uploadStatus">Processing securely...</div>
+
+            <div class="result-box" id="resultBox">
+                <h3>✅ File Secured</h3>
+                <p style="font-size: 12px; margin: 0 0 5px 0;">Filename: <strong id="outFilename"></strong></p>
+                <label style="font-size: 12px; font-weight: bold; color: #065F46;">Decryption Key (Share via secure channel):</label>
+                <div class="key-display" id="outKey"></div>
+            </div>
+        </div>
+
+        <!-- DECRYPT PANEL -->
+        <div class="card">
+            <h2>🔓 Decrypt & Download</h2>
+            <form action="/decrypt" method="POST" target="_blank" id="decryptForm">
+                <div class="form-group">
+                    <label>Encrypted Filename</label>
+                    <input type="text" name="filename" placeholder="e.g. data.pdf.enc" required autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label>Decryption Key</label>
+                    <input type="text" name="key" placeholder="Paste the exact key here" required autocomplete="off">
+                </div>
+                <button type="submit" class="btn" style="background-color: #10B981;">Unlock & Download</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('uploadBtn').addEventListener('click', async function() {
+            const fileInput = document.getElementById('fileInput');
+            if (fileInput.files.length === 0) {
+                alert("Please select a file first.");
+                return;
+            }
+
+            const btn = this;
+            const status = document.getElementById('uploadStatus');
+            const resultBox = document.getElementById('resultBox');
+            
+            btn.disabled = true;
+            status.style.display = 'block';
+            resultBox.style.display = 'none';
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            try {
+                const response = await fetch('/upload', { method: 'POST', body: formData });
+                const data = await response.json();
+
+                if(response.ok) {
+                    document.getElementById('outFilename').innerText = data.filename;
+                    document.getElementById('outKey').innerText = data.key;
+                    resultBox.style.display = 'block';
+                    
+                    // Auto-fill the decrypt panel for easy testing
+                    document.querySelector('input[name="filename"]').value = data.filename;
+                } else {
+                    alert("Error: " + data.error);
+                }
+            } catch (error) {
+                alert("Server connection failed.");
+            } finally {
+                btn.disabled = false;
+                status.style.display = 'none';
+                fileInput.value = ''; // clear input
+            }
+        });
+    </script>
+</body>
+</html>
