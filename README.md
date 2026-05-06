@@ -68,3 +68,4 @@ The file decrypts in memory, downloads to their machine, and the server permanen
 This project was built with a Zero-Trust mindset. If a malicious actor compromises the server, they will only find .enc files consisting of scrambled ciphertexts. Because the decryption keys are generated locally and immediately handed off to the user (never stored in a database), the server itself cannot decrypt the files it hosts.
 
 Built for Hackathons & Secure Communications.
+
