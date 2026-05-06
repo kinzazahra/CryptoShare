@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Secure Delivery | CryptoShare AI</title>
+    <style>
+        :root { --primary: #10B981; --primary-hover: #059669; --bg-color: #F3F4F6; --text-main: #1F2937; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; padding: 20px;}
+        .card { background: white; padding: 40px; border-radius: 16px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; position: relative;}
+        .badge { background: #FEE2E2; color: #991B1B; font-size: 12px; padding: 6px 12px; border-radius: 20px; font-weight: 600; display: inline-block; margin-bottom: 20px;}
+        .filename-box { background: #F8FAFC; border: 1px dashed #CBD5E1; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 15px; color: #334155; margin-bottom: 25px; word-break: break-all;}
+        .form-group input { width: 100%; padding: 14px; border: 1px solid #D1D5DB; border-radius: 8px; font-size: 15px; margin-bottom: 20px; box-sizing: border-box; text-align: center;}
+        .btn { width: 100%; background: var(--primary); color: white; padding: 14px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s;}
+        .btn:hover { background: var(--primary-hover); }
+        .warning { font-size: 12px; color: #6B7280; margin-top: 20px;}
+    </style>
+</head>
+<body>
+    <div class="card">
+        <span class="badge">🔥 Self-Destructing Payload</span>
+        <h2 style="margin: 0 0 10px 0; color: var(--text-main);">Incoming Secure File</h2>
+        <p style="color: #6B7280; font-size: 14px; margin-bottom: 20px;">Someone has sent you an end-to-end encrypted file. You need the 44-character secret key to unlock it.</p>
+        
+        <div class="filename-box">
+            📁 {{ filename }}
+        </div>
+
+        <form action="/decrypt" method="POST">
+            <!-- Hidden input passes the filename to the backend securely -->
+            <input type="hidden" name="filename" value="{{ filename }}">
+            
+            <div class="form-group">
+                <input type="text" name="key" placeholder="Paste Decryption Key Here" required autocomplete="off">
+            </div>
+            <button type="submit" class="btn" onclick="setTimeout(()=> location.reload(), 2500)">🔓 Unlock & Download</button>
+        </form>
+        
+        <p class="warning">Warning: Once downloaded, this file will be permanently wiped from our servers.</p>
+    </div>
+</body>
+</html>
