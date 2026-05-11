@@ -29,5 +29,5 @@ CryptoShare AI is a modern, enterprise-grade SaaS web application built to solve
 
 ---
 
-❤️ **Made with love by Kinza Zahra**
+ **Made by Kinza Zahra**
 
