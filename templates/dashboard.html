@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload | CryptoShare AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+
+    <a href="/logout" style="position: absolute; top: 20px; right: 20px; color: var(--text-muted); text-decoration: none; font-weight: 600;">Secure Logout</a>
+    <div id="toast">✅ Copied securely to clipboard!</div>
+
+    <div class="header-text">
+        <h1>Secure Dashboard</h1>
+        <p>Encrypt payloads with AES-128 and generate one-time access links.</p>
+    </div>
+
+    <div class="glass-card">
+        
+        <div class="toggles">
+            <span class="badge active">🔥 Burn After Reading</span>
+            <span class="badge active">⏱️ 24h Expiration</span>
+            <span class="badge active">🧠 AI Malware Scan</span>
+        </div>
+
+        <div class="drop-zone" id="dropZone">
+            <svg style="width:40px; color:var(--primary); margin-bottom:10px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+            <p>Drag & drop a payload here, or <strong style="color:var(--primary)">browse</strong></p>
+            <input type="file" id="fileInput">
+        </div>
+
+        <button class="btn-primary" id="uploadBtn">Encrypt & Generate Access</button>
+        
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="result-box" id="resultBox">
+            <h3 style="margin-bottom: 15px; color: #10b981;">✅ Payload Secured</h3>
+            <p id="aiRisk" style="font-size: 13px; margin-bottom: 15px;"></p>
+            
+            <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">1. Magic Link (Click to copy):</label>
+            <div class="key-display" id="outLink" onclick="copyData(this.innerText)"></div>
+
+            <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">2. Decryption Key (Click to copy):</label>
+            <div class="key-display" id="outKey" onclick="copyData(this.innerText)"></div>
+
+            <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">3. Scan to Download:</label>
+            <div id="qrcode" style="margin-top: 10px; display: flex; justify-content: center;"></div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
