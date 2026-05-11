@@ -26,3 +26,5 @@ CryptoShare AI is a modern, enterprise-grade SaaS web application built to solve
    ```bash
    git clone [https://github.com/yourusername/CryptoShare-AI.git](https://github.com/yourusername/CryptoShare-AI.git)
    cd CryptoShare-AI
+
+   **Made by Kinza Zahra**
